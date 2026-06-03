@@ -183,15 +183,15 @@ func (t *Translator) processHTTPRouteParentRefs(httpRoute *HTTPRouteContext, res
 		}
 		hasHostnameIntersection := t.processHTTPRouteParentRefListener(httpRoute, routeRoutes, parentRef, xdsIR)
 		if !hasHostnameIntersection {
-			routeStatus := GetRouteStatus(httpRoute)
-			status.SetRouteStatusCondition(routeStatus,
-				parentRef.routeParentStatusIdx,
-				httpRoute.GetGeneration(),
-				gwapiv1.RouteConditionAccepted,
-				metav1.ConditionFalse,
-				gwapiv1.RouteReasonNoMatchingListenerHostname,
-				"There were no hostname intersections between the HTTPRoute and this parent ref's Listener(s).",
-			)
+			// routeStatus := GetRouteStatus(httpRoute)
+			// status.SetRouteStatusCondition(routeStatus,
+			// 	parentRef.routeParentStatusIdx,
+			// 	httpRoute.GetGeneration(),
+			// 	gwapiv1.RouteConditionAccepted,
+			// 	metav1.ConditionFalse,
+			// 	gwapiv1.RouteReasonNoMatchingListenerHostname,
+			// 	"There were no hostname intersections between the HTTPRoute and this parent ref's Listener(s).",
+			// )
 		}
 
 		// Skip parent refs that did not accept the route
@@ -1261,7 +1261,8 @@ func (t *Translator) processHTTPRouteParentRefListener(route RouteContext, route
 	// need to check hostname intersection if there are listeners
 	hasHostnameIntersection := len(parentRef.listeners) == 0
 	for _, listener := range parentRef.listeners {
-		hosts := computeHosts(GetHostnames(route), listener)
+		//hosts := computeHosts(GetHostnames(route), listener)
+		hosts := GetHostnames(route)
 		if len(hosts) == 0 {
 			continue
 		}
